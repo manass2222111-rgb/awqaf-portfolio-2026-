@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#265e54">
-<meta name="application-name" content="Awqaf Portfolio 2026 - Secure Admin Edition">
 <meta name="description" content="ملف إنجاز وشواهد تفاعلي لمراكز تحفيظ القرآن الكريم – نسخة شخصية 2026">
 <title>ملف الإنجاز والشواهد | مراكز تحفيظ القرآن الكريم – 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,13 +36,11 @@
 .admin-name{font-size:10px;color:#456d58;overflow-wrap:anywhere;padding:10px}
 .admin-login-box{border:1px solid #e3ece1;background:#f7faf7;border-radius:12px;padding:20px;line-height:2.1;font-size:12px}
 
-/* FIX: prevent Arabic words and totals overlapping in the right sidebar */
-.side-status{min-width:0;overflow-wrap:anywhere;word-break:normal;line-height:1.7}
-.side-status strong,.side-status p{display:block;white-space:normal;overflow-wrap:anywhere;line-height:1.8;margin-block:5px}
-.side-status .tinycaps{display:block;line-height:1.7}
-.goal-card .tag,.goal-detail-head .tag{white-space:normal;max-width:100%;line-height:1.5}
-.kpi-value{overflow-wrap:anywhere}
-@media(max-width:760px){.side-status{width:100%}.goal-details-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}}
+/* Annual plan library, public read-only section */
+.annual-card{background:linear-gradient(125deg,#fefefd,#f4f7f3);border:1px solid #dce7dc;border-radius:16px;padding:24px;margin-bottom:18px;display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.annual-art{height:64px;width:64px;display:grid;place-items:center;border-radius:15px;background:#e9f1e9;color:#235b4f;flex-shrink:0}
+.annual-body{flex:1;min-width:210px}.annual-body h3{font-size:18px;margin:5px 0;color:#1b4b3d}.annual-body p{font-size:11px;color:#667d71;margin:4px 0}.annual-frame{width:100%;height:740px;max-height:82vh;border:0;background:#fff}.annual-frame-wrap{border:1px solid #e4ece5;border-radius:12px;overflow:hidden;background:white}.annual-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.annual-small{font-size:10px;color:#6a7b70;margin:9px 0 0}
+@media(max-width:720px){.annual-card{padding:16px}.annual-art{height:48px;width:48px}.annual-body h3{font-size:15px}.annual-frame{height:68vh}}
 </style>
 </head>
 <body>
@@ -101,18 +98,18 @@ const G_BASE=[
  {id:5,kind:'reports',unit:'تقرير',metric:'تقارير تقييم المعلمين',weight:10,activity:'تحسين وتطوير عملية التحفيظ',initiative:'مبادرات قرآنية ابتكارية'}
 ];
 const PLANS={
- 'abubakr:morning':{circles:6,teachers:6,manager:'د. محمد العلي',visits:213,exams:90,quarter:[30,10,30,30],goal3:'تقديم ما لا يقل عن مبادرتين تساهمان في رفع مستوى أداء الحلقات وتحفيز المنافسة',goal4:'تنمية وتدريب 5 دارسين موهوبين وإعدادهم للمسابقات على مستوى الدولة'},
+ 'abubakr:morning':{circles:6,teachers:6,manager:'د. محمد العلي',visits:213,exams:90,quarter:[30,10,30,30],goal3:'تقديم ما لا يقل عن مبادرتين تساهمان في رفع مستوى أداء الحلقات وتحفيز المنافسة',goal4:'تنمية وتدريب 10 دارسين موهوبين وإعدادهم للمسابقات على مستوى الدولة'},
  'abubakr:evening':{circles:10,teachers:10,manager:'د. محمد العلي',visits:84,exams:40,quarter:[30,10,30,30],goal3:'تقديم ما لا يقل عن مبادرتين تساهمان في رفع مستوى أداء الحلقات وتحفيز المنافسة',goal4:'تنمية وتدريب 5 دارسين موهوبين وإعدادهم للمسابقات على مستوى الدولة'},
  'hessa:evening':{circles:7,teachers:7,manager:'فاطمة النعيمي',visits:84,exams:40,quarter:[25,25,25,25],goal3:'تقديم ما لا يقل عن مبادرتين تساهمان في رفع مستوى أداء الحلقات وتحفيز المنافسة',goal4:'تنمية وتدريب 5 دارسين موهوبين وإعدادهم للمسابقات على مستوى الدولة'}
 };
 const CATEGORY={visit:'زيارة إشرافية',exam:'اختبار دارس',initiative:'مبادرة',competition:'مسابقة / موهوب',report:'تقرير',plan:'الخطة الأصلية',training:'تدريب / تطوير',other:'شاهد آخر'};
 const catForGoal={1:'visit',2:'exam',3:'initiative',4:'competition',5:'report'};
-const NAV=[['dashboard','لوحة الإنجاز','home'],['goals','الأهداف الاستراتيجية','layers'],['evidence','مكتبة الشواهد','folder'],['performance','المؤشرات والتقارير','chart'],['programs','المبادرات والمسابقات','award'],['plan','ملفات وخطة العمل','clipboard'],['settings','الإعدادات والنسخ','settings']];
+const NAV=[['dashboard','لوحة الإنجاز','home'],['goals','الأهداف الاستراتيجية','layers'],['evidence','مكتبة الشواهد','folder'],['performance','المؤشرات والتقارير','chart'],['programs','المبادرات والمسابقات','award'],['plan','الخطة السنوية','clipboard'],['settings','الإعدادات والنسخ','settings']];
 let selCenter=null,selPeriod=null,tab='dashboard',detailGoal=null;let filesCache=[];let progress={};let db=null;let previews=[];let activeFilters={q:'',cat:'all',goal:'all'};
 const $=s=>document.querySelector(s), esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function unit(){return selCenter+':'+selPeriod}function plan(){return PLANS[unit()]}function center(){return CENTERS[selCenter]}function nf(n){const x=typeof n==='number'?n:Number(n);return Number.isFinite(x)?new Intl.NumberFormat('ar-AE',{maximumFractionDigits:1}).format(x):'—'}
-function goals(){const p=plan();return G_BASE.map(x=>({...x,target:[p.visits,p.exams,2,5,3][x.id-1],title:[`تنفيذ عدد ${p.visits} زيارة تقييمية وإشرافية لـ ${p.circles} حلقات قرآنية (${P[selPeriod]}) خلال 2026`,`اختبار ${p.exams} دارسًا وتقييم مستواهم (مستويات وأجزاء) خلال 2026`,p.goal3,p.goal4,'تقديم 3 تقارير في السنة لتقييم عمل معلمي القرآن خلال 2026'][x.id-1],quarter:x.id===5?[25,25,25,25]:p.quarter,done:Number(progress[unit()]?.[x.id]||0)}))}
-function percent(g){const d=Number(g.done),t=Number(g.target);return Number.isFinite(d)&&Number.isFinite(t)&&t>0?Math.min(100,Math.max(0,Math.round(d/t*100))):0}function countEvidence(goalId){return filesCache.filter(x=>x.unit===unit()&&(!goalId||Number(x.goal)===Number(goalId))).length}function unitFiles(){return filesCache.filter(x=>x.unit===unit()).sort((a,b)=>String(b.addedAt).localeCompare(String(a.addedAt)))}function numUnit(i){return i==='morning'?'ص':'م'}
+function unit(){return selCenter+':'+selPeriod}function plan(){return PLANS[unit()]}function center(){return CENTERS[selCenter]}function nf(n){return new Intl.NumberFormat('ar-AE',{maximumFractionDigits:1}).format(n||0)}
+function goals(){const p=plan();return G_BASE.map(x=>({...x,target:[p.visits,p.exams,2,(selCenter==='abubakr'&&selPeriod==='morning'?10:5),3][x.id-1],title:[`تنفيذ عدد ${p.visits} زيارة تقييمية وإشرافية لـ ${p.circles} حلقات قرآنية (${P[selPeriod]}) خلال 2026`,`اختبار ${p.exams} دارسًا وتقييم مستواهم (مستويات وأجزاء) خلال 2026`,p.goal3,p.goal4,'تقديم 3 تقارير في السنة لتقييم عمل معلمي القرآن خلال 2026'][x.id-1],quarter:x.id===5?[25,25,25,25]:p.quarter,done:Number(progress[unit()]?.[x.id]||0)}))}
+function percent(g){return Math.min(100,Math.round(g.done/g.target*100))}function countEvidence(goalId){return filesCache.filter(x=>x.unit===unit()&&(!goalId||Number(x.goal)===Number(goalId))).length}function unitFiles(){return filesCache.filter(x=>x.unit===unit()).sort((a,b)=>String(b.addedAt).localeCompare(String(a.addedAt)))}function numUnit(i){return i==='morning'?'ص':'م'}
 function toast(message){let el=$('#toast');el.textContent=message;el.classList.add('on');clearTimeout(toast._timer);toast._timer=setTimeout(()=>el.classList.remove('on'),3400)}function busy(on,t='جارٍ معالجة البيانات...'){$('#loading-text').textContent=t;$('#loading').classList.toggle('active',!!on)}
 function renderCenters(){let html=Object.entries(CENTERS).map(([id,c],n)=>`<button class="center-option" onclick="chooseCenter('${id}')"><div class="card-top"><span class="card-symbol">${ic('building',30)}</span><span class="center-num">0${n+1}</span></div><h2>${esc(c.title)}</h2><p>${c.periods.length>1?'ملفان مستقلان للفترتين الصباحية والمسائية':'ملف مستقل للفترة المسائية'}</p><div class="card-bottom"><span>الدخول إلى المركز</span><span class="round-arrow">${ic('arrow',17)}</span></div></button>`).join('');$('#centers-list').innerHTML=html}
 function show(view){['centers','periods','app'].forEach(x=>$('#view-'+x).hidden=(x!==view));window.scrollTo({top:0,behavior:'instant'});const last=view==='centers'?'اختيار المركز':view==='periods'?'اختيار الفترة':center().short+' – '+P[selPeriod];document.title=last+' | ملف الإنجاز والشواهد 2026'}
@@ -126,7 +123,7 @@ function renderNavigation(){let nav=NAV.filter(([id])=>id!=='settings'||isAdmin(
 function goto(id){if(id==='settings'&&!isAdmin()){adminLogin();return}tab=id;detailGoal=null;renderApp();window.scrollTo({top:0,behavior:'smooth'})}
 function pageTitle(title,sub,acts=''){return `<div class="page-title-row"><div><span class="eyebrow">${esc(center().short)} · ${esc(P[selPeriod])}</span><h2>${title}</h2>${sub?`<p>${sub}</p>`:''}</div><div class="actions">${acts}</div></div>`}
 function renderApp(){if(!selPeriod)return;renderNavigation();let html=detailGoal?renderGoalDetail(Number(detailGoal)):{dashboard:renderDashboard,goals:renderGoals,evidence:renderEvidence,performance:renderPerformance,programs:renderPrograms,plan:renderPlan,settings:renderSettings}[tab]();$('#app-content').innerHTML=html;applyAdminUI();if(tab==='evidence'&&!detailGoal)syncFilters()}
-function setProgressBar(done,total){const d=Number(done),t=Number(total);const pct=Number.isFinite(d)&&Number.isFinite(t)&&t>0?Math.max(0,Math.min(100,100*d/t)):0;return `<div class="progress-mini"><i style="width:${pct}%"></i></div>`}
+function setProgressBar(done,total){return `<div class="progress-mini"><i style="width:${total?Math.min(100,100*done/total):0}%"></i></div>`}
 function kpi(label,done,target,icon){return `<div class="kpi"><div class="kpi-top"><span>${label}</span><span class="kpi-icon">${ic(icon,18)}</span></div><div class="kpi-value">${nf(done)} <small>${target!=null?' / '+nf(target):''}</small></div>${target!=null?setProgressBar(done,target):'<div style="font-size:10px;color:#9cab9f;margin-top:5px">شاهد موثق في المكتبة</div>'}</div>`}
 function originalRenderDashboard(){let gs=goals(),v=gs[0],e=gs[1],complete=gs.filter(x=>x.done>=x.target).length;let latest=unitFiles().slice(0,4);return `${pageTitle('لوحة الإنجاز','نظرة مركزة على خطة العمل ومؤشرات التوثيق.',`<button class="btn primary" onclick="openAdd()">${ic('plus',16)} إضافة شاهد جديد</button>`)}<div class="welcome"><div><span class="kicker">الخطة التشغيلية والتوجيهية الشرعية · ٢٠٢٦</span><h2>${esc(center().title)}</h2><p>${esc(P[selPeriod])} · ${plan().circles} حلقات قرآنية · ${plan().teachers} معلمين / محفظين</p></div><div class="date-panel"><big>2026</big><small>سنة الإنجاز</small></div></div><div class="kpi-grid">${kpi('الزيارات الإشرافية',v.done,v.target,'building')}${kpi('اختبارات الدارسين',e.done,e.target,'clipboard')}${kpi('الشواهد المسجلة',countEvidence(),null,'folder')}${kpi('الأهداف المكتملة',complete,5,'award')}</div><div class="split"><div class="panel"><div class="panel-header"><h3>مستوى تحقيق الأهداف</h3><button class="btn sm ghost" onclick="goto('goals')">عرض الأهداف ${ic('arrow',15)}</button></div><div class="panel-body">${gs.map(g=>`<div style="margin-bottom:19px"><div style="display:flex;gap:10px;justify-content:space-between;align-items:center"><span class="td-strong" style="font-size:11px">${esc(g.metric)}</span><strong style="color:var(--green);font-size:11px" dir="ltr">${nf(g.done)} / ${nf(g.target)}</strong></div>${setProgressBar(g.done,g.target)}</div>`).join('')}</div></div><div class="panel"><div class="panel-header"><h3>أحدث الشواهد</h3><button class="btn sm ghost" onclick="goto('evidence')">المكتبة ${ic('arrow',15)}</button></div>${latest.length?latest.map(fileRow).join(''):renderEmpty('لا توجد شواهد بعد','يمكنك رفع ملفات Excel وPDF والصور وربط كل ملف بهدفه الصحيح.','إضافة أول شاهد','openAdd()')}</div></div><div class="notice gold" style="margin-top:18px">${ic('info',17)}<span>قيم الإنجاز الحالية تبدأ من الصفر، ولا تتغيّر إلا بعد إدخال الأعداد الفعلية من قبلك. رفع ملف شاهد لا يُحتسب تلقائيًا زيارة أو اختبارًا.</span></div>`}
 function goalCard(g){let p=percent(g);return `<div class="goal-card"><div class="topline"><span class="goal-index">الهدف ${String(g.id).padStart(2,'0')}</span><span class="tag ${p===100?'':'gray'}">${p===100?'مكتمل':g.done?'قيد التنفيذ':'لم يبدأ'}</span></div><h3>${esc(g.title)}</h3><div class="metrics"><span><big>${nf(g.done)}</big> من ${nf(g.target)} ${esc(g.unit)}</span><strong>${p}%</strong></div><div class="bar"><i style="width:${p}%"></i></div><div class="bottomline"><span style="font-size:10px;color:#81938a">${countEvidence(g.id)} شواهد مرفقة</span><button class="btn sm" onclick="openGoal(${g.id})">تفاصيل الهدف ${ic('arrow',13)}</button></div></div>`}
@@ -186,11 +183,11 @@ function identifyCenter(v){let t=arabicTidy(v);if(t==='abubakr'||(t.includes('ا
 function identifyPeriod(v){let t=arabicTidy(v);if(t==='morning'||t.includes('صباح'))return 'morning';if(t==='evening'||t.includes('مسا'))return 'evening';return null}
 function identifyCategory(v){let t=arabicTidy(v);let match=Object.entries(CATEGORY).find(([k,label])=>k===t||arabicTidy(label)===t);if(match)return match[0];if(t.includes('زيار'))return 'visit';if(t.includes('اختبار'))return 'exam';if(t.includes('مباد'))return 'initiative';if(t.includes('مسابق'))return 'competition';if(t.includes('تقرير'))return 'report';if(t.includes('خط'))return 'plan';if(t.includes('تدريب'))return 'training';return 'other'}
 function parseGoal(v){let n=Number(String(v??'').replace(/[^\d]/g,''));if(n>=1&&n<=5)return n;const s=arabicTidy(v);let ar=['الاول','الثاني','الثالث','الرابع','الخامس'];let i=ar.findIndex(x=>s.includes(x));return i<0?null:i+1}
-function querySheet(tab){return new Promise((resolve,reject)=>{let callback='awqafData_'+Math.random().toString(36).slice(2),script=document.createElement('script'),done=false,timer;const finish=(error,data)=>{if(done)return;done=true;clearTimeout(timer);script.remove();try{delete window[callback]}catch(e){};error?reject(error):resolve(data)};window[callback]=resp=>{if(resp?.status==='error')return finish(new Error((resp.errors||[]).map(x=>x.detailed_message||x.message).join('؛ ')||'تعذر قراءة الجدول'));if(!resp?.table?.rows)return finish(new Error('استجابة Google Sheets غير متوقعة'));let list=resp.table.rows.map(row=>(row.c||[]).map(cell=>(typeof cell?.v==='number'?cell.v:(cell?.f??cell?.v??''))));finish(null,list)};const base='https://docs.google.com/spreadsheets/d/'+linkedSheetId+'/gviz/tq';const params=new URLSearchParams({sheet:tab,headers:'1',tqx:'out:json;responseHandler:'+callback,tq:'select *',_t:String(Date.now())});script.src=base+'?'+params.toString();script.onerror=()=>finish(new Error('تعذّر الوصول إلى Google Sheets؛ تحقق من صلاحيات المشاهدة واتصال الإنترنت'));timer=setTimeout(()=>finish(new Error('انتهت مهلة الاتصال؛ جرّب تحديث الشواهد')),14000);document.head.appendChild(script)})}
+function querySheet(tab){return new Promise((resolve,reject)=>{let callback='awqafData_'+Math.random().toString(36).slice(2),script=document.createElement('script'),done=false,timer;const finish=(error,data)=>{if(done)return;done=true;clearTimeout(timer);script.remove();try{delete window[callback]}catch(e){};error?reject(error):resolve(data)};window[callback]=resp=>{if(resp?.status==='error')return finish(new Error((resp.errors||[]).map(x=>x.detailed_message||x.message).join('؛ ')||'تعذر قراءة الجدول'));if(!resp?.table?.rows)return finish(new Error('استجابة Google Sheets غير متوقعة'));let list=resp.table.rows.map(row=>(row.c||[]).map(cell=>cell?.f??cell?.v??''));finish(null,list)};const base='https://docs.google.com/spreadsheets/d/'+linkedSheetId+'/gviz/tq';const params=new URLSearchParams({sheet:tab,headers:'1',tqx:'out:json;responseHandler:'+callback,tq:'select *',_t:String(Date.now())});script.src=base+'?'+params.toString();script.onerror=()=>finish(new Error('تعذّر الوصول إلى Google Sheets؛ تحقق من صلاحيات المشاهدة واتصال الإنترنت'));timer=setTimeout(()=>finish(new Error('انتهت مهلة الاتصال؛ جرّب تحديث الشواهد')),14000);document.head.appendChild(script)})}
 function parseCloudEvidence(rows){let valid=[],skipped=0;rows.forEach((cols,i)=>{if(cols.every(v=>!String(v).trim()))return;let [cent,period,goal,title,category,date,url,notes,kind,fileName]=cols.map(v=>String(v??'').trim());let c=identifyCenter(cent),p=identifyPeriod(period),file=googleDriveLink(url);if(!c||!p||!file||!CENTERS[c]?.periods.includes(p)){skipped++;return}let niceName=fileName||title||'مستند بدون عنوان';if(!/\.[a-z0-9]{2,6}$/i.test(niceName)&&kind)niceName+='.'+({excel:'xlsx','إكسل':'xlsx','اكسل':'xlsx',image:'jpg','صورة':'jpg',pdf:'pdf',PDF:'pdf'}[kind]||String(kind).replace(/^\./,''));valid.push({id:'cloud_'+i,unit:c+':'+p,goal:parseGoal(goal),category:identifyCategory(category),title:title||niceName,fileName:niceName,date,notes,addedAt:('000000'+(999999-i)).slice(-6),size:0,remote:true,url:file.orig,previewUrl:file.preview,fileType:kind||''})});cloudInfo.skipped=skipped;return valid}
-function parseCloudProgress(rows){const next={};for(let cols of rows){let [c,p,g,value]=cols.map(v=>String(v??'').trim()),ci=identifyCenter(c),pi=identifyPeriod(p),gi=parseGoal(g),v=Number(value);if(ci&&pi&&gi&&String(value).trim()!==''&&/^\d+(?:\.\d+)?$/.test(String(value).trim())&&Number.isFinite(v)&&v>=0){let key=ci+':'+pi;next[key]??={};next[key][gi]=v}}return next}
+function parseCloudProgress(rows){const next={};for(let cols of rows){let [c,p,g,value]=cols.map(v=>String(v??'').trim()),ci=identifyCenter(c),pi=identifyPeriod(p),gi=parseGoal(g),v=Number(value);if(ci&&pi&&gi&&Number.isFinite(v)&&v>=0){let key=ci+':'+pi;next[key]??={};next[key][gi]=v}}return next}
 async function refreshFiles(){if(!linkedSheetId){filesCache=[];cloudProgress={};cloudInfo.error='لم يتم ربط جدول Google Sheets بعد';cloudInfo.loading=false;return}cloudInfo.loading=true;cloudInfo.error='';cloudInfo.progressError='';const result=await Promise.allSettled([querySheet(SHEET_TABS.evidence),querySheet(SHEET_TABS.progress)]);if(result[0].status==='fulfilled'){filesCache=parseCloudEvidence(result[0].value);cloudInfo.lastUpdated=new Date().toLocaleTimeString('ar-AE',{hour:'2-digit',minute:'2-digit'});}else{filesCache=[];cloudInfo.error=result[0].reason?.message||'فشل تحميل الشواهد'}if(result[1].status==='fulfilled')cloudProgress=parseCloudProgress(result[1].value);else{cloudProgress={};cloudInfo.progressError='تعذّر قراءة تبويب الإنجاز؛ تحقّق من اسمه وإتاحته.'}cloudInfo.loading=false}
-function goals(){let p=plan();return G_BASE.map(x=>({...x,target:[p.visits,p.exams,2,5,3][x.id-1],title:[`تنفيذ عدد ${p.visits} زيارة تقييمية وإشرافية لـ ${p.circles} حلقات قرآنية (${P[selPeriod]}) خلال 2026`,`اختبار ${p.exams} دارسًا وتقييم مستواهم (مستويات وأجزاء) خلال 2026`,p.goal3,p.goal4,'تقديم 3 تقارير في السنة لتقييم عمل معلمي القرآن خلال 2026'][x.id-1],quarter:x.id===5?[25,25,25,25]:p.quarter,done:Number(cloudProgress[unit()]?.[x.id]||0)}))}
+function goals(){let p=plan();return G_BASE.map(x=>({...x,target:[p.visits,p.exams,2,(selCenter==='abubakr'&&selPeriod==='morning'?10:5),3][x.id-1],title:[`تنفيذ عدد ${p.visits} زيارة تقييمية وإشرافية لـ ${p.circles} حلقات قرآنية (${P[selPeriod]}) خلال 2026`,`اختبار ${p.exams} دارسًا وتقييم مستواهم (مستويات وأجزاء) خلال 2026`,p.goal3,p.goal4,'تقديم 3 تقارير في السنة لتقييم عمل معلمي القرآن خلال 2026'][x.id-1],quarter:x.id===5?[25,25,25,25]:p.quarter,done:Number(cloudProgress[unit()]?.[x.id]||0)}))}
 const _originalDashboard=originalRenderDashboard;
 function renderDashboard(){let s=_originalDashboard();s=s.replace('يمكنك رفع ملفات Excel وPDF والصور وربط كل ملف بهدفه الصحيح.','أضف الرابط في Google Sheets ليظهر الملف لجميع الزوار.').replace('قيم الإنجاز الحالية تبدأ من الصفر، ولا تتغيّر إلا بعد إدخال الأعداد الفعلية من قبلك. رفع ملف شاهد لا يُحتسب تلقائيًا زيارة أو اختبارًا.','أرقام الإنجاز والشواهد تُقرأ من Google Sheets. إضافة رابط شاهد لا تغيّر عدد الإنجازات الفعلية تلقائيًا.');return s+cloudMiniStatus()}
 function cloudMiniStatus(){if(!linkedSheetId)return `<div class="notice gold">${ic('info',16)}<span>لم يُربط جدول الشواهد بعد. يحتاج مالك الموقع إلى إضافة رابط الجدول في ملف config.js.</span></div>`;if(cloudInfo.error)return `<div class="notice" style="border-color:#e6b9b1">${ic('info',16)}<span>لم تُحمّل الشواهد: ${esc(cloudInfo.error)}</span><button class="btn sm" onclick="syncCloud()">إعادة المحاولة</button></div>`;return `<div class="notice">${ic('check',16)}<span>الشواهد مرتبطة بـ Google Drive / Sheets. ${filesCache.length} شاهد في الفهرس${cloudInfo.lastUpdated?' · آخر مزامنة '+esc(cloudInfo.lastUpdated):''}.</span><button class="btn sm" onclick="syncCloud()">تحديث الآن</button></div>${cloudInfo.progressError?`<div class="notice gold">${ic('info',16)}<span>${esc(cloudInfo.progressError)}</span></div>`:''}`}
@@ -216,20 +213,20 @@ function currentSheetStatus(){if(!linkedSheetId)return 'لم يُربط جدول
 function renderSettings(){if(!isAdmin())return '<div class="notice">دخول المشرف مطلوب.</div>';return `${pageTitle('ربط Google Drive وGoogle Sheets','تخزين الشواهد في Drive وتحديث فهرسها وأعداد الإنجاز لكل الزوار.',`<button class="btn" onclick="syncCloud()">${ic('download',16)} تحديث الشواهد</button>`)}<div class="panel"><div class="panel-header"><h3>ربط جدول الشواهد</h3><span class="tag gold">${esc(currentSheetStatus())}</span></div><div class="panel-body"><p>1. ارفع ملف «قالب_فهرس_الشواهد.xlsx» إلى Google Drive وافتحه باستخدام Google Sheets. 2. تأكد من أن تبويبيه اسمهما <strong>الشواهد</strong> و<strong>الإنجاز</strong>. 3. شارك الجدول بصلاحية «أي شخص لديه الرابط — مشاهد». 4. الصق رابط الجدول هنا.</p><div class="form-grid"><div class="form-field full"><label for="cloud-sheet-link">رابط جدول Google Sheets</label><input id="cloud-sheet-link" dir="ltr" type="text" placeholder="https://docs.google.com/spreadsheets/d/.../edit" value="${linkedSheetId?esc(sheetEditorUrl()):''}"></div></div><div class="actions" style="margin-top:15px"><button class="btn primary" onclick="connectCloudSheet()">${ic('check',15)} تجربة الربط وتحديث الموقع</button><button class="btn" onclick="downloadConfig()">${ic('download',16)} تحميل config.js للنشر على GitHub</button>${linkedSheetId?`<button class="btn" onclick="openGoogleSheet()">فتح Google Sheets</button>`:''}</div><div class="notice gold" style="margin-top:14px">${ic('info',16)}<span>تجربة الربط تعمل على جهازك فقط. لتعمل نفس الروابط عند كل الزوار، ارفع ملف <b>config.js</b> الجديد مع <b>index.html</b> إلى مستودع GitHub Pages.</span></div></div></div><div class="settings-grid"><div class="settings-item"><h3>إضافة الشواهد</h3><p>ارفع PDF أو Excel أو الصورة إلى Google Drive، ثم اضغط «إضافة شاهد» داخل الموقع لنسخ صف منسق والصقه في تبويب «الشواهد».</p><button class="btn primary" onclick="openAdd()">${ic('plus',16)} إضافة شاهد</button></div><div class="settings-item"><h3>تحديث الإنجاز الفعلي</h3><p>أدخل عدد الزيارات والاختبارات والإنجازات المنفذة في تبويب «الإنجاز» حتى تظهر للجميع.</p><button class="btn" onclick="openGoogleSheet('الإنجاز')">${ic('chart',16)} فتح تبويب الإنجاز</button></div><div class="settings-item"><h3>مزامنة البيانات</h3><p>آخر جلب: ${esc(cloudInfo.lastUpdated||'لا توجد مزامنة')} ${cloudInfo.skipped?'· صفوف مستبعدة: '+cloudInfo.skipped:''}</p><button class="btn" onclick="syncCloud()">${ic('download',16)} جلب آخر التعديلات</button></div><div class="settings-item"><h3>تقرير PDF</h3><p>ملخص قابل للطباعة يتضمن بيانات الفترة الحالية وفهرس الشواهد المربوطة.</p><button class="btn" onclick="exportPdf()">${ic('file',16)} تصدير PDF</button></div></div>${cloudInfo.error?`<div class="notice" style="margin-top:15px">${ic('info',16)}<span>${esc(cloudInfo.error)}</span></div>`:''}${cloudInfo.progressError?`<div class="notice gold" style="margin-top:15px">${ic('info',16)}<span>${esc(cloudInfo.progressError)}</span></div>`:''}<div class="notice gold" style="margin-top:14px">${ic('info',16)}<span><b>الخصوصية:</b> كل من يملك رابط الموقع يمكنه الاطلاع على الشواهد المتاحة للعرض العام، وقد يصل إلى روابط الملفات الأصلية. استخدم هذه الطريقة فقط للوثائق المسموح بنشرها من جهة العمل.</span></div>`}
 async function connectCloudSheet(){let id=extractSheetId($('#cloud-sheet-link')?.value);if(!id){toast('ألصق رابط جدول Google Sheets الصحيح');return}linkedSheetId=id;try{localStorage.setItem('awqaf_cloud_sheet_preview',id)}catch(e){}cloudInfo.source=(window.AWQAF_SHEET_ID===id)?'published':'preview';await syncCloud()}
 function downloadConfig(){if(!linkedSheetId){toast('اربط جدول Google Sheets أولًا');return}let src='// AWQAF Portfolio — public spreadsheet ID only; no credentials here.\nwindow.AWQAF_SHEET_ID = '+JSON.stringify(linkedSheetId)+';\n';downloadBlob(new Blob([src],{type:'text/javascript;charset=utf-8'}),'config.js');toast('نزّل config.js وارفعه إلى GitHub بجانب index.html')}
-/* Startup uses the async init() defined above; no duplicate initializer. */
+function init(){renderCenters();$('#ico-pdf').innerHTML=ic('file',15);$('#ico-switch').innerHTML=ic('layers',15);show('centers')}
 
 
 /* Google OAuth administrator sign-in.
    The browser UI gate is not a security boundary. Google Drive verifies write capability,
    while Google Sheets/Drive server permissions alone control document changes. */
-const ADMIN_SCOPE='https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/spreadsheets';
+const ADMIN_SCOPE='https://www.googleapis.com/auth/drive.metadata.readonly';
 let adminAccessToken='',adminExpiresAt=0,adminVerified=false,adminTokenClient=null;
 function isAdmin(){return adminVerified&&!!adminAccessToken&&Date.now()<adminExpiresAt}
 function adminClientId(){return String(window.AWQAF_GOOGLE_CLIENT_ID||'').trim()}
 function applyAdminUI(){
   if(isAdmin())return;
   let root=$('#app-content');if(!root)return;
-  let protectedActions=['openAdd(', 'openUpdate(', 'deleteFile(', 'connectCloudSheet(', 'downloadConfig(', 'importBackup(', 'exportBackup(', 'copyEvidenceRow(', 'openGoalEditor('];
+  let protectedActions=['openAdd(', 'openUpdate(', 'deleteFile(', 'connectCloudSheet(', 'downloadConfig(', 'importBackup(', 'exportBackup(', 'copyEvidenceRow('];
   root.querySelectorAll('[onclick]').forEach(el=>{
     let action=el.getAttribute('onclick')||'';
     if(protectedActions.some(name=>action.includes(name)))el.style.display='none';
@@ -285,222 +282,36 @@ downloadConfig=function(...args){if(!isAdmin()){adminLogin();return}return _admi
 copyEvidenceRow=function(...args){if(!isAdmin()){adminLogin();return}return _adminOldCopy(...args)};
 
 
-
-/* CLOUD GOALS v2 — Google Sheets is the only persistent record for goals and achievements.
-   Read: public Sheets visualization endpoint. Write: authorized Google Sheets API.
-   Never store OAuth access tokens in GitHub, localStorage or a spreadsheet. */
-const GOALS_TAB='الأهداف';
-let cloudGoalOverrides={};
-let cloudGoalRows={};
-let hasCloudGoalsTab=false;
-function defaultGoalFor(k,n){
-  const p=PLANS[k],period=k.endsWith('morning')?'morning':'evening',base=G_BASE[n-1];
-  const titles=[
-    `تنفيذ عدد ${p.visits} زيارة تقييمية وإشرافية لـ ${p.circles} حلقات قرآنية (${P[period]}) خلال 2026`,
-    `اختبار ${p.exams} دارسًا وتقييم مستواهم (مستويات وأجزاء) خلال 2026`,
-    p.goal3,p.goal4,'تقديم 3 تقارير في السنة لتقييم عمل معلمي القرآن خلال 2026'
-  ];
-  return {...base,title:titles[n-1],target:[p.visits,p.exams,2,5,3][n-1],
-    quarter:n===5?[25,25,25,25]:[...p.quarter]};
-}
-function allGoalRows(){
-  const result=[];
-  for(const k of ['abubakr:morning','abubakr:evening','hessa:evening']){
-    const [c,p]=k.split(':');
-    for(let n=1;n<=5;n++){
-      const g=defaultGoalFor(k,n);
-      result.push([CENTERS[c].short,p==='morning'?'صباحي':'مسائي',n,g.title,g.target,g.unit,g.weight,g.initiative,g.activity,...g.quarter]);
-    }
-  }
-  return result;
-}
-let rejectedGoalRows=[];
-function goalNumber(value,min,max){
-  // Reject dates, formatted text, formulas or invalid numbers; do not expose NaN in the public portfolio.
-  const v=String(value??'').trim();
-  if(!/^(?:\d+)(?:\.\d+)?$/.test(v))return null;
-  const n=Number(v);return Number.isFinite(n)&&n>=min&&n<=max?n:null;
-}
-function parseGoalOverrides(rows){
-  const found={},indexes={},rejected=[];
-  for(let i=0;i<rows.length;i++){
-    const r=rows[i],c=identifyCenter(r[0]),p=identifyPeriod(r[1]),n=parseGoal(r[2]);
-    if(!c||!p||!n||!CENTERS[c].periods.includes(p))continue;
-    const key=c+':'+p,base=defaultGoalFor(key,n);
-    const title=String(r[3]??'').trim(),target=goalNumber(r[4],0,1000000),weight=goalNumber(r[6],0,100);
-    const quarter=[9,10,11,12].map(j=>goalNumber(r[j],0,100));
-    const unitText=String(r[5]??'').trim();
-    const valid=title.length>=20 && !/^(?:Date\(|\d{4}-\d\d-\d\d)/.test(title)
-      &&target!==null&&weight!==null&&unitText.length>0&&unitText.length<45
-      &&quarter.every(q=>q!==null)&&quarter.reduce((a,b)=>a+b,0)===100;
-    if(!valid){rejected.push(`${CENTERS[c].short} / ${p==='morning'?'صباحي':'مسائي'} / الهدف ${n}`);continue;}
-    found[key]??={};indexes[key]??={};indexes[key][n]=i+2;
-    found[key][n]={title,target,unit:unitText,weight,
-      initiative:String(r[7]??base.initiative)||base.initiative,
-      activity:String(r[8]??base.activity)||base.activity,quarter};
-  }
-  cloudGoalOverrides=found;cloudGoalRows=indexes;rejectedGoalRows=rejected;
-}
-const _goalReadBeforeCloud=goals;
-goals=function(){return _goalReadBeforeCloud().map(g=>({ ...g,...(cloudGoalOverrides[unit()]?.[g.id]||{}) }));};
-const _filesRefreshBeforeGoals=refreshFiles;
-refreshFiles=async function(){
-  await _filesRefreshBeforeGoals();
-  if(!linkedSheetId)return;
-  try{
-    const rows=await querySheet(GOALS_TAB);
-    parseGoalOverrides(rows);hasCloudGoalsTab=true;
-  }catch(e){
-    // Preserve defaults when the goals tab is absent or unavailable.
-    cloudGoalOverrides={};cloudGoalRows={};rejectedGoalRows=[];
-  }
+/* Annual plan: one distinct, original source document for each center/period.
+   Files in ./plans/ are published alongside the site on GitHub Pages.
+   A Google Drive plan entry in the evidence Sheet can override the bundled copy. */
+const ANNUAL_PLAN_FILES={
+ 'abubakr:morning':{path:'./plans/abu_bakr_morning_2026.html',name:'خطة أخصائي التوجيه الشرعي – مركز أبو بكر الصديق – الفترة الصباحية 2026',format:'HTML',note:'الخطة الأصلية بصيغة HTML؛ يمكن عرضها وطباعتها من المتصفح'},
+ 'abubakr:evening':{path:'./plans/abu_bakr_evening_2026.html',name:'خطة أخصائي التوجيه الشرعي – مركز أبو بكر الصديق – الفترة المسائية 2026',format:'HTML',note:'الخطة الأصلية بصيغة HTML؛ يمكن عرضها وطباعتها من المتصفح'},
+ 'hessa:evening':{path:'./plans/hessa_evening_2026.pdf',name:'خطة أخصائي التوجيه الشرعي – مركز الشيخة حصة – الفترة المسائية 2026',format:'PDF',note:'الخطة الأصلية بصيغة PDF – خمس صفحات'}
 };
-function sheetQuoted(name){return "'"+name.replace(/'/g,"''")+"'";}
-async function sheetsRequest(path,{method='GET',body}={}){
-  if(!isAdmin())throw Error('يجب تسجيل الدخول بحساب المشرف أولًا');
-  const response=await fetch('https://sheets.googleapis.com/v4/spreadsheets/'+encodeURIComponent(linkedSheetId)+path,{
-    method,headers:{Authorization:'Bearer '+adminAccessToken,'Content-Type':'application/json'},
-    ...(body===undefined?{}:{body:JSON.stringify(body)})
-  });
-  const payload=await response.json().catch(()=>({}));
-  if(!response.ok){
-    const detail=payload?.error?.message||'Google Sheets API error';
-    if(response.status===403)throw Error('لا توجد صلاحية لتعديل جدول Google Sheets أو لم تُفعّل Google Sheets API. '+detail);
-    if(response.status===401)throw Error('انتهت جلسة Google. سجّل خروج المشرف ثم ادخل مجددًا.');
-    throw Error('Google Sheets HTTP '+response.status+': '+detail);
-  }
-  return payload;
+function currentAnnualPlan(){
+ const def=ANNUAL_PLAN_FILES[unit()];if(!def)return null;
+ const remote=unitFiles().find(x=>x.category==='plan'&&x.remote&&googleDriveLink(x.url));
+ if(!remote)return {...def,preview:def.path,url:def.path,external:false};
+ const drive=googleDriveLink(remote.url);
+ return {name:remote.title||def.name,format:fileLabel(remote),note:remote.notes||'نسخة الخطة المرتبطة من Google Drive',preview:drive?.preview||'',url:drive?.orig||remote.url,external:true};
 }
-async function sheetsGetRange(range){return await sheetsRequest('/values/'+encodeURIComponent(range));}
-async function sheetsPutRanges(data){
-  return await sheetsRequest('/values:batchUpdate',{method:'POST',body:{valueInputOption:'RAW',data:data.map(d=>({range:d.range,majorDimension:'ROWS',values:d.values}))}});
+function renderPlan(){
+ const doc=currentAnnualPlan(),gs=goals();
+ if(!doc)return pageTitle('الخطة السنوية','لا توجد خطة لهذه الفترة');
+ const openText=doc.external?'فتح الخطة على Google Drive':'فتح الخطة في تبويب جديد';
+ const safeLink=esc(doc.url),safePreview=doc.preview?esc(doc.preview):'';
+ const action=`<a class="btn primary" href="${safeLink}" target="_blank" rel="noopener noreferrer">${ic('eye',16)} ${openText}</a>`;
+ const adminHelp=isAdmin()?`<div class="notice gold" style="margin-top:14px">${ic('info',16)}<span>لتغيير نسخة هذه الخطة من Google Drive: أضف سطرًا في تبويب «الشواهد» لنفس المركز والفترة، واترك رقم الهدف فارغًا، واختر التصنيف «الخطة الأصلية» وضع رابط الملف. ستظهر نسخة Drive هنا بدل الملف المرفق مع الموقع.</span></div>`:'';
+ return `${pageTitle('الخطة السنوية لعام 2026','النسخة الأصلية لخطة الفترة المختارة، منفصلة عن شواهد تحقيق الأهداف.',`<button class="btn" onclick="goto('goals')">${ic('layers',16)} الأهداف الخمسة</button>`)}
+ <div class="annual-card"><div class="annual-art">${ic('clipboard',33)}</div><div class="annual-body"><span class="eyebrow">الخطة السنوية · ${esc(P[selPeriod])}</span><h3>${esc(doc.name)}</h3><p>${esc(center().title)} · 2026 · عدد الحلقات: ${plan().circles}</p><div class="annual-small">${esc(doc.note)}</div></div><div class="annual-actions"><span class="tag gold">${esc(doc.format)}</span>${action}</div></div>
+ <div class="panel"><div class="panel-header"><h3>معاينة الخطة الأصلية</h3><a class="btn sm" href="${safeLink}" target="_blank" rel="noopener noreferrer">${ic('file',15)} فتح بالحجم الكامل</a></div><div class="panel-body"><div class="annual-frame-wrap">${safePreview?`<iframe class="annual-frame" title="معاينة الخطة السنوية" src="${safePreview}" loading="lazy" referrerpolicy="no-referrer" ></iframe>`:`<div class="empty"><h4>المعاينة غير متاحة لهذا الرابط</h4><p>اضغط «فتح الخطة» لعرض النسخة الأصلية.</p></div>`}</div><p class="annual-small">إذا لم تظهر المعاينة على الهاتف أو منع المتصفح عرض Google Drive، استخدم زر «فتح بالحجم الكامل» أعلاه.</p></div></div>
+ <div class="panel"><div class="panel-header"><h3>الأهداف الاستراتيجية للخطة</h3><button class="btn sm" onclick="goto('goals')">عرض تفاصيل الأهداف</button></div><div class="table-wrap"><table><thead><tr><th>م</th><th>الهدف</th><th>المستهدف</th><th>الوزن</th><th>شواهد الإنجاز</th></tr></thead><tbody>${gs.map(g=>`<tr><td>${g.id}</td><td class="td-strong righttext">${esc(g.title)}</td><td>${nf(g.target)} ${esc(g.unit)}</td><td>${g.weight}%</td><td><button class="btn sm" onclick="openGoal(${g.id})">عرض الهدف وشواهده</button></td></tr>`).join('')}</tbody></table></div></div>
+ ${adminHelp}`;
 }
-function rowIdentity(row){
-  const c=identifyCenter(row[0]),p=identifyPeriod(row[1]),n=parseGoal(row[2]);
-  return c&&p&&n?c+':'+p+':'+n:null;
-}
-async function getProgressRows(){
-  const got=await sheetsGetRange(sheetQuoted(SHEET_TABS.progress)+'!A2:F');
-  return got.values||[];
-}
-async function ensureGoalTab(){
-  const meta=await sheetsRequest('?fields=sheets.properties.title');
-  const existing=(meta.sheets||[]).some(x=>x.properties?.title===GOALS_TAB);
-  if(existing){hasCloudGoalsTab=true;return;}
-  await sheetsRequest(':batchUpdate',{method:'POST',body:{requests:[{addSheet:{properties:{title:GOALS_TAB,gridProperties:{frozenRowCount:1}}}}]}});
-  const headers=['المركز','الفترة','رقم الهدف','نص الهدف الاستراتيجي','المستهدف السنوي','وحدة القياس','الوزن %','المبادرة','النشاط','الربع الأول %','الربع الثاني %','الربع الثالث %','الربع الرابع %'];
-  await sheetsPutRanges([{range:sheetQuoted(GOALS_TAB)+'!A1:M16',values:[headers,...allGoalRows()]}]);
-  // Add clear goal labels beside the numbered goal IDs in the existing achievement sheet.
-  // Preserve all existing A:E data, including actual achievement values.
-  const progressRows=await getProgressRows();
-  const labels=[];
-  for(let i=0;i<progressRows.length;i++){
-    const r=progressRows[i],id=rowIdentity(r);
-    if(!id||String(r[5]||'').trim())continue;
-    const parts=id.split(':'),num=Number(parts[2]),description=defaultGoalFor(parts[0]+':'+parts[1],num).title;
-    labels.push({range:sheetQuoted(SHEET_TABS.progress)+`!F${i+2}`,values:[[description]]});
-  }
-  if(labels.length)await sheetsPutRanges([{range:sheetQuoted(SHEET_TABS.progress)+'!F1',values:[['نص الهدف الاستراتيجي']]},...labels]);
-  hasCloudGoalsTab=true;
-}
-async function matchGoalRow(key,n){
-  const rows=(await sheetsGetRange(sheetQuoted(GOALS_TAB)+'!A2:M')).values||[];
-  let ix=rows.findIndex(r=>rowIdentity(r)===key+':'+n);
-  return ix>=0?ix+2:0;
-}
-function safeInteger(value,name,{min=0,max=1000000}={}){
-  const str=String(value??'').trim();const num=Number(str);
-  if(!str||!Number.isInteger(num)||num<min||num>max)throw Error('تحقق من '+name+'؛ يجب إدخال عدد صحيح بين '+min+' و'+max);
-  return num;
-}
-function openGoalEditor(n){
-  if(!isAdmin()){adminLogin();return}
-  const g=goals().find(x=>x.id===Number(n));if(!g)return;
-  const c=`<div class="notice gold">سيُحفظ نص الهدف والمستهدف والإنجاز مباشرة في Google Sheets، وسيظهر التعديل لجميع الزوار بعد تحديث الصفحة.</div>
-    <div class="form-grid" style="margin-top:15px">
-      <div class="form-field full"><label for="ge-title">نص الهدف الاستراتيجي كاملًا</label><textarea id="ge-title" rows="3">${esc(g.title)}</textarea></div>
-      <div class="form-field"><label for="ge-target">المستهدف السنوي</label><input type="number" min="0" id="ge-target" value="${g.target}"></div>
-      <div class="form-field"><label for="ge-done">الإنجاز الفعلي</label><input type="number" min="0" id="ge-done" value="${g.done}"></div>
-      <div class="form-field"><label for="ge-unit">وحدة القياس</label><input id="ge-unit" value="${esc(g.unit)}"></div>
-      <div class="form-field"><label for="ge-weight">وزن الهدف (%)</label><input type="number" min="0" max="100" id="ge-weight" value="${g.weight}"></div>
-      <div class="form-field full"><label for="ge-initiative">المبادرة</label><input id="ge-initiative" value="${esc(g.initiative)}"></div>
-      <div class="form-field full"><label for="ge-activity">النشاط</label><input id="ge-activity" value="${esc(g.activity)}"></div>
-      ${g.quarter.map((q,i)=>`<div class="form-field"><label for="ge-q${i}">الربع ${['الأول','الثاني','الثالث','الرابع'][i]} (%)</label><input id="ge-q${i}" type="number" min="0" max="100" value="${q}"></div>`).join('')}
-    </div>`;
-  openModal('تعديل الهدف '+n+' — '+esc(center().short)+' / '+P[selPeriod],c,
-    `<button class="btn" onclick="closeModal()">إلغاء</button><button class="btn primary" id="ge-save" onclick="saveGoalEditor(${n})">حفظ في Google Sheets</button>`,true);
-}
-async function saveGoalEditor(n){
-  if(!isAdmin()){adminLogin();return}
-  const get=id=>document.getElementById(id)?.value||'';
-  let title=get('ge-title').trim(),unitText=get('ge-unit').trim(),initiative=get('ge-initiative').trim(),activity=get('ge-activity').trim();
-  if(!title||!unitText){toast('نص الهدف ووحدة القياس مطلوبان');return}
-  let target,done,weight,quarter;
-  try{
-    target=safeInteger(get('ge-target'),'المستهدف السنوي');
-    done=safeInteger(get('ge-done'),'الإنجاز الفعلي');
-    weight=safeInteger(get('ge-weight'),'الوزن',{max:100});
-    quarter=[0,1,2,3].map(i=>safeInteger(get('ge-q'+i),'الربع '+(i+1),{max:100}));
-    if(quarter.reduce((a,b)=>a+b,0)!==100)throw Error('مجموع نسب الأرباع الأربعة يجب أن يساوي 100%.');
-  }catch(e){toast(e.message);return}
-  const btn=document.getElementById('ge-save');if(btn){btn.disabled=true;btn.textContent='جارٍ الحفظ في Google Sheets...'}
-  try{
-    await ensureGoalTab();
-    const key=unit();const goalRow=await matchGoalRow(key,n);
-    if(!goalRow)throw Error('لم أجد صف الهدف في تبويب «الأهداف». لم يتم حفظ أي تعديل لتجنب الكتابة في الصف الخاطئ.');
-    const progressRows=await getProgressRows();
-    const progressIndex=progressRows.findIndex(r=>rowIdentity(r)===key+':'+n);
-    if(progressIndex<0)throw Error('لم أجد صف الهدف في تبويب «الإنجاز». تحقق من المركز والفترة ورقم الهدف.');
-    const progressRow=progressIndex+2;
-    const records=[
-      {range:sheetQuoted(GOALS_TAB)+`!D${goalRow}:M${goalRow}`,values:[[title,target,unitText,weight,initiative,activity,...quarter]]},
-      {range:sheetQuoted(SHEET_TABS.progress)+`!D${progressRow}:F${progressRow}`,values:[[done,target,title]]}
-    ];
-    await sheetsPutRanges(records);
-    await refreshFiles();
-    // Keep the confirmed write visible immediately even if the public Sheets feed is briefly cached.
-    cloudGoalOverrides[key]??={};
-    cloudGoalOverrides[key][n]={title,target,unit:unitText,weight,initiative,activity,quarter};
-    cloudProgress[key]??={};cloudProgress[key][n]=done;
-    closeModal();renderApp();toast('تم حفظ الهدف والإنجاز في Google Sheets بنجاح');
-  }catch(e){console.error(e);toast(e.message||'تعذر حفظ الهدف في Google Sheets');if(btn){btn.disabled=false;btn.textContent='إعادة محاولة الحفظ'}}
-}
-const _renderGoalCardBeforeCloud=goalCard;
-goalCard=function(g){
-  let html=_renderGoalCardBeforeCloud(g);
-  if(isAdmin())html=html.replace('تفاصيل الهدف', 'تفاصيل الهدف'); // retain original footer; editor is available in goal detail
-  return html;
-};
-const _renderGoalDetailBeforeCloud=renderGoalDetail;
-renderGoalDetail=function(n){
-  let html=_renderGoalDetailBeforeCloud(n);
-  return html.replace('تسجيل أو تعديل الإنجاز','تعديل الهدف والمستهدف والإنجاز')
-    .replace(`onclick="openUpdate(${n})"`,`onclick="openGoalEditor(${n})"`);
-};
-const _renderPerformanceBeforeCloud=renderPerformance;
-renderPerformance=function(){let output=_renderPerformanceBeforeCloud();output=output.replaceAll('onclick="openUpdate(', 'onclick="openGoalEditor(');output=output.replace('<th>المؤشر</th>','<th>المؤشر</th><th>نص الهدف</th>');return output.replace(/(<td class="td-strong">[^<]*<\/td>)/g,(match,cell)=>{const m=match.match(/<td class="td-strong">([^<]*)<\/td>/);const g=goals().find(x=>x.metric===m?.[1]);return cell+(g?`<td class="righttext" style="min-width:230px">${esc(g.title)}</td>`:'<td></td>');});};
-const _renderSettingsBeforeCloud=renderSettings;
-renderSettings=function(){let out=_renderSettingsBeforeCloud();return out+`<div class="panel" style="margin-top:18px;padding:20px"><h3>إدارة الأهداف والمستهدفات — Google Sheets</h3><p class="section-note">اختر الهدف لتعديل وصفه والمستهدف والإنجاز ونسب الأرباع. لا تُحفظ الأرقام في هذا المتصفح بل مباشرة في Google Sheets.</p><div class="actions" style="flex-wrap:wrap">${goals().map(g=>`<button class="btn" onclick="openGoalEditor(${g.id})">تعديل الهدف ${g.id} — ${esc(g.metric)}</button>`).join('')}</div><div class="notice gold" style="margin-top:12px">عند أول تعديل سيُنشأ تلقائيًا تبويب «الأهداف» وستُضاف أوصاف الأهداف في العمود F من تبويب «الإنجاز» للصف الذي تعدله.</div></div>`;};
-const _renderGoalsSafe=renderGoals;
-renderGoals=function(){
-  let html=_renderGoalsSafe();
-  if(rejectedGoalRows.length){
-    html=`<div class="notice gold" style="margin-bottom:15px;display:block;line-height:1.8">⚠️ توجد بيانات أهداف غير صالحة في Google Sheets (${rejectedGoalRows.length} صف). عُرضت قيم الخطة الأصلية بدلًا منها لحماية التقارير من الأرقام الخاطئة. ادخل بحساب المشرف لتصحيح البيانات.</div>`+html;
-  }
-  if(isAdmin()){
-    const actions=`<div class="panel" style="margin-bottom:18px;padding:18px"><h3 style="margin:0 0 12px">تعديل الأهداف والمستهدفات</h3><div class="actions" style="display:flex;flex-wrap:wrap;gap:8px">${goals().map(g=>`<button type="button" class="btn sm" onclick="openGoalEditor(${g.id})">${ic('edit',14)} تعديل الهدف ${g.id}</button>`).join('')}</div></div>`;
-    html=actions+html;
-  }
-  return html;
-};
-const _renderDashboardSafe=renderDashboard;
-renderDashboard=function(){
-  const html=_renderDashboardSafe();
-  if(rejectedGoalRows.length)return `<div class="notice gold" style="display:block;margin-bottom:15px">⚠️ بعض بيانات المستهدفات في Google Sheets غير صالحة؛ أُظهرت أرقام الخطة الأصلية مؤقتًا. راجع تبويب «الأهداف» قبل الاعتماد على المؤشرات.</div>`+html;
-  return html;
-};
-// Old locally stored progress must not be mistaken for a shared cloud update.
-openUpdate=function(n){return openGoalEditor(n)};
+const _annualDashboard=renderDashboard;
+renderDashboard=function(){const html=_annualDashboard();return html+`<div class="panel" style="margin-top:18px"><div class="panel-header"><h3>الخطة السنوية الأصلية – ${esc(P[selPeriod])}</h3><button class="btn sm primary" onclick="goto('plan')">${ic('eye',15)} معاينة الخطة</button></div><div class="panel-body"><p style="font-size:11px;color:#64766d">اطلع على الخطة المعتمدة للمركز والفترة الحالية، ثم انتقل إلى كل هدف لمشاهدة شواهد الإنجاز المرتبطة به.</p></div></div>`};
 
 init();
 </script>
