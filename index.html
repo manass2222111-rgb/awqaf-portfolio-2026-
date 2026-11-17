@@ -36,6 +36,14 @@
 .admin-footer:hover{background:#eaf2eb}
 .admin-name{font-size:10px;color:#456d58;overflow-wrap:anywhere;padding:10px}
 .admin-login-box{border:1px solid #e3ece1;background:#f7faf7;border-radius:12px;padding:20px;line-height:2.1;font-size:12px}
+
+/* FIX: prevent Arabic words and totals overlapping in the right sidebar */
+.side-status{min-width:0;overflow-wrap:anywhere;word-break:normal;line-height:1.7}
+.side-status strong,.side-status p{display:block;white-space:normal;overflow-wrap:anywhere;line-height:1.8;margin-block:5px}
+.side-status .tinycaps{display:block;line-height:1.7}
+.goal-card .tag,.goal-detail-head .tag{white-space:normal;max-width:100%;line-height:1.5}
+.kpi-value{overflow-wrap:anywhere}
+@media(max-width:760px){.side-status{width:100%}.goal-details-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}}
 </style>
 </head>
 <body>
@@ -102,9 +110,9 @@ const catForGoal={1:'visit',2:'exam',3:'initiative',4:'competition',5:'report'};
 const NAV=[['dashboard','لوحة الإنجاز','home'],['goals','الأهداف الاستراتيجية','layers'],['evidence','مكتبة الشواهد','folder'],['performance','المؤشرات والتقارير','chart'],['programs','المبادرات والمسابقات','award'],['plan','ملفات وخطة العمل','clipboard'],['settings','الإعدادات والنسخ','settings']];
 let selCenter=null,selPeriod=null,tab='dashboard',detailGoal=null;let filesCache=[];let progress={};let db=null;let previews=[];let activeFilters={q:'',cat:'all',goal:'all'};
 const $=s=>document.querySelector(s), esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function unit(){return selCenter+':'+selPeriod}function plan(){return PLANS[unit()]}function center(){return CENTERS[selCenter]}function nf(n){return new Intl.NumberFormat('ar-AE',{maximumFractionDigits:1}).format(n||0)}
+function unit(){return selCenter+':'+selPeriod}function plan(){return PLANS[unit()]}function center(){return CENTERS[selCenter]}function nf(n){const x=typeof n==='number'?n:Number(n);return Number.isFinite(x)?new Intl.NumberFormat('ar-AE',{maximumFractionDigits:1}).format(x):'—'}
 function goals(){const p=plan();return G_BASE.map(x=>({...x,target:[p.visits,p.exams,2,5,3][x.id-1],title:[`تنفيذ عدد ${p.visits} زيارة تقييمية وإشرافية لـ ${p.circles} حلقات قرآنية (${P[selPeriod]}) خلال 2026`,`اختبار ${p.exams} دارسًا وتقييم مستواهم (مستويات وأجزاء) خلال 2026`,p.goal3,p.goal4,'تقديم 3 تقارير في السنة لتقييم عمل معلمي القرآن خلال 2026'][x.id-1],quarter:x.id===5?[25,25,25,25]:p.quarter,done:Number(progress[unit()]?.[x.id]||0)}))}
-function percent(g){return Math.min(100,Math.round(g.done/g.target*100))}function countEvidence(goalId){return filesCache.filter(x=>x.unit===unit()&&(!goalId||Number(x.goal)===Number(goalId))).length}function unitFiles(){return filesCache.filter(x=>x.unit===unit()).sort((a,b)=>String(b.addedAt).localeCompare(String(a.addedAt)))}function numUnit(i){return i==='morning'?'ص':'م'}
+function percent(g){const d=Number(g.done),t=Number(g.target);return Number.isFinite(d)&&Number.isFinite(t)&&t>0?Math.min(100,Math.max(0,Math.round(d/t*100))):0}function countEvidence(goalId){return filesCache.filter(x=>x.unit===unit()&&(!goalId||Number(x.goal)===Number(goalId))).length}function unitFiles(){return filesCache.filter(x=>x.unit===unit()).sort((a,b)=>String(b.addedAt).localeCompare(String(a.addedAt)))}function numUnit(i){return i==='morning'?'ص':'م'}
 function toast(message){let el=$('#toast');el.textContent=message;el.classList.add('on');clearTimeout(toast._timer);toast._timer=setTimeout(()=>el.classList.remove('on'),3400)}function busy(on,t='جارٍ معالجة البيانات...'){$('#loading-text').textContent=t;$('#loading').classList.toggle('active',!!on)}
 function renderCenters(){let html=Object.entries(CENTERS).map(([id,c],n)=>`<button class="center-option" onclick="chooseCenter('${id}')"><div class="card-top"><span class="card-symbol">${ic('building',30)}</span><span class="center-num">0${n+1}</span></div><h2>${esc(c.title)}</h2><p>${c.periods.length>1?'ملفان مستقلان للفترتين الصباحية والمسائية':'ملف مستقل للفترة المسائية'}</p><div class="card-bottom"><span>الدخول إلى المركز</span><span class="round-arrow">${ic('arrow',17)}</span></div></button>`).join('');$('#centers-list').innerHTML=html}
 function show(view){['centers','periods','app'].forEach(x=>$('#view-'+x).hidden=(x!==view));window.scrollTo({top:0,behavior:'instant'});const last=view==='centers'?'اختيار المركز':view==='periods'?'اختيار الفترة':center().short+' – '+P[selPeriod];document.title=last+' | ملف الإنجاز والشواهد 2026'}
@@ -118,7 +126,7 @@ function renderNavigation(){let nav=NAV.filter(([id])=>id!=='settings'||isAdmin(
 function goto(id){if(id==='settings'&&!isAdmin()){adminLogin();return}tab=id;detailGoal=null;renderApp();window.scrollTo({top:0,behavior:'smooth'})}
 function pageTitle(title,sub,acts=''){return `<div class="page-title-row"><div><span class="eyebrow">${esc(center().short)} · ${esc(P[selPeriod])}</span><h2>${title}</h2>${sub?`<p>${sub}</p>`:''}</div><div class="actions">${acts}</div></div>`}
 function renderApp(){if(!selPeriod)return;renderNavigation();let html=detailGoal?renderGoalDetail(Number(detailGoal)):{dashboard:renderDashboard,goals:renderGoals,evidence:renderEvidence,performance:renderPerformance,programs:renderPrograms,plan:renderPlan,settings:renderSettings}[tab]();$('#app-content').innerHTML=html;applyAdminUI();if(tab==='evidence'&&!detailGoal)syncFilters()}
-function setProgressBar(done,total){return `<div class="progress-mini"><i style="width:${total?Math.min(100,100*done/total):0}%"></i></div>`}
+function setProgressBar(done,total){const d=Number(done),t=Number(total);const pct=Number.isFinite(d)&&Number.isFinite(t)&&t>0?Math.max(0,Math.min(100,100*d/t)):0;return `<div class="progress-mini"><i style="width:${pct}%"></i></div>`}
 function kpi(label,done,target,icon){return `<div class="kpi"><div class="kpi-top"><span>${label}</span><span class="kpi-icon">${ic(icon,18)}</span></div><div class="kpi-value">${nf(done)} <small>${target!=null?' / '+nf(target):''}</small></div>${target!=null?setProgressBar(done,target):'<div style="font-size:10px;color:#9cab9f;margin-top:5px">شاهد موثق في المكتبة</div>'}</div>`}
 function originalRenderDashboard(){let gs=goals(),v=gs[0],e=gs[1],complete=gs.filter(x=>x.done>=x.target).length;let latest=unitFiles().slice(0,4);return `${pageTitle('لوحة الإنجاز','نظرة مركزة على خطة العمل ومؤشرات التوثيق.',`<button class="btn primary" onclick="openAdd()">${ic('plus',16)} إضافة شاهد جديد</button>`)}<div class="welcome"><div><span class="kicker">الخطة التشغيلية والتوجيهية الشرعية · ٢٠٢٦</span><h2>${esc(center().title)}</h2><p>${esc(P[selPeriod])} · ${plan().circles} حلقات قرآنية · ${plan().teachers} معلمين / محفظين</p></div><div class="date-panel"><big>2026</big><small>سنة الإنجاز</small></div></div><div class="kpi-grid">${kpi('الزيارات الإشرافية',v.done,v.target,'building')}${kpi('اختبارات الدارسين',e.done,e.target,'clipboard')}${kpi('الشواهد المسجلة',countEvidence(),null,'folder')}${kpi('الأهداف المكتملة',complete,5,'award')}</div><div class="split"><div class="panel"><div class="panel-header"><h3>مستوى تحقيق الأهداف</h3><button class="btn sm ghost" onclick="goto('goals')">عرض الأهداف ${ic('arrow',15)}</button></div><div class="panel-body">${gs.map(g=>`<div style="margin-bottom:19px"><div style="display:flex;gap:10px;justify-content:space-between;align-items:center"><span class="td-strong" style="font-size:11px">${esc(g.metric)}</span><strong style="color:var(--green);font-size:11px" dir="ltr">${nf(g.done)} / ${nf(g.target)}</strong></div>${setProgressBar(g.done,g.target)}</div>`).join('')}</div></div><div class="panel"><div class="panel-header"><h3>أحدث الشواهد</h3><button class="btn sm ghost" onclick="goto('evidence')">المكتبة ${ic('arrow',15)}</button></div>${latest.length?latest.map(fileRow).join(''):renderEmpty('لا توجد شواهد بعد','يمكنك رفع ملفات Excel وPDF والصور وربط كل ملف بهدفه الصحيح.','إضافة أول شاهد','openAdd()')}</div></div><div class="notice gold" style="margin-top:18px">${ic('info',17)}<span>قيم الإنجاز الحالية تبدأ من الصفر، ولا تتغيّر إلا بعد إدخال الأعداد الفعلية من قبلك. رفع ملف شاهد لا يُحتسب تلقائيًا زيارة أو اختبارًا.</span></div>`}
 function goalCard(g){let p=percent(g);return `<div class="goal-card"><div class="topline"><span class="goal-index">الهدف ${String(g.id).padStart(2,'0')}</span><span class="tag ${p===100?'':'gray'}">${p===100?'مكتمل':g.done?'قيد التنفيذ':'لم يبدأ'}</span></div><h3>${esc(g.title)}</h3><div class="metrics"><span><big>${nf(g.done)}</big> من ${nf(g.target)} ${esc(g.unit)}</span><strong>${p}%</strong></div><div class="bar"><i style="width:${p}%"></i></div><div class="bottomline"><span style="font-size:10px;color:#81938a">${countEvidence(g.id)} شواهد مرفقة</span><button class="btn sm" onclick="openGoal(${g.id})">تفاصيل الهدف ${ic('arrow',13)}</button></div></div>`}
@@ -178,9 +186,9 @@ function identifyCenter(v){let t=arabicTidy(v);if(t==='abubakr'||(t.includes('ا
 function identifyPeriod(v){let t=arabicTidy(v);if(t==='morning'||t.includes('صباح'))return 'morning';if(t==='evening'||t.includes('مسا'))return 'evening';return null}
 function identifyCategory(v){let t=arabicTidy(v);let match=Object.entries(CATEGORY).find(([k,label])=>k===t||arabicTidy(label)===t);if(match)return match[0];if(t.includes('زيار'))return 'visit';if(t.includes('اختبار'))return 'exam';if(t.includes('مباد'))return 'initiative';if(t.includes('مسابق'))return 'competition';if(t.includes('تقرير'))return 'report';if(t.includes('خط'))return 'plan';if(t.includes('تدريب'))return 'training';return 'other'}
 function parseGoal(v){let n=Number(String(v??'').replace(/[^\d]/g,''));if(n>=1&&n<=5)return n;const s=arabicTidy(v);let ar=['الاول','الثاني','الثالث','الرابع','الخامس'];let i=ar.findIndex(x=>s.includes(x));return i<0?null:i+1}
-function querySheet(tab){return new Promise((resolve,reject)=>{let callback='awqafData_'+Math.random().toString(36).slice(2),script=document.createElement('script'),done=false,timer;const finish=(error,data)=>{if(done)return;done=true;clearTimeout(timer);script.remove();try{delete window[callback]}catch(e){};error?reject(error):resolve(data)};window[callback]=resp=>{if(resp?.status==='error')return finish(new Error((resp.errors||[]).map(x=>x.detailed_message||x.message).join('؛ ')||'تعذر قراءة الجدول'));if(!resp?.table?.rows)return finish(new Error('استجابة Google Sheets غير متوقعة'));let list=resp.table.rows.map(row=>(row.c||[]).map(cell=>cell?.f??cell?.v??''));finish(null,list)};const base='https://docs.google.com/spreadsheets/d/'+linkedSheetId+'/gviz/tq';const params=new URLSearchParams({sheet:tab,headers:'1',tqx:'out:json;responseHandler:'+callback,tq:'select *',_t:String(Date.now())});script.src=base+'?'+params.toString();script.onerror=()=>finish(new Error('تعذّر الوصول إلى Google Sheets؛ تحقق من صلاحيات المشاهدة واتصال الإنترنت'));timer=setTimeout(()=>finish(new Error('انتهت مهلة الاتصال؛ جرّب تحديث الشواهد')),14000);document.head.appendChild(script)})}
+function querySheet(tab){return new Promise((resolve,reject)=>{let callback='awqafData_'+Math.random().toString(36).slice(2),script=document.createElement('script'),done=false,timer;const finish=(error,data)=>{if(done)return;done=true;clearTimeout(timer);script.remove();try{delete window[callback]}catch(e){};error?reject(error):resolve(data)};window[callback]=resp=>{if(resp?.status==='error')return finish(new Error((resp.errors||[]).map(x=>x.detailed_message||x.message).join('؛ ')||'تعذر قراءة الجدول'));if(!resp?.table?.rows)return finish(new Error('استجابة Google Sheets غير متوقعة'));let list=resp.table.rows.map(row=>(row.c||[]).map(cell=>(typeof cell?.v==='number'?cell.v:(cell?.f??cell?.v??''))));finish(null,list)};const base='https://docs.google.com/spreadsheets/d/'+linkedSheetId+'/gviz/tq';const params=new URLSearchParams({sheet:tab,headers:'1',tqx:'out:json;responseHandler:'+callback,tq:'select *',_t:String(Date.now())});script.src=base+'?'+params.toString();script.onerror=()=>finish(new Error('تعذّر الوصول إلى Google Sheets؛ تحقق من صلاحيات المشاهدة واتصال الإنترنت'));timer=setTimeout(()=>finish(new Error('انتهت مهلة الاتصال؛ جرّب تحديث الشواهد')),14000);document.head.appendChild(script)})}
 function parseCloudEvidence(rows){let valid=[],skipped=0;rows.forEach((cols,i)=>{if(cols.every(v=>!String(v).trim()))return;let [cent,period,goal,title,category,date,url,notes,kind,fileName]=cols.map(v=>String(v??'').trim());let c=identifyCenter(cent),p=identifyPeriod(period),file=googleDriveLink(url);if(!c||!p||!file||!CENTERS[c]?.periods.includes(p)){skipped++;return}let niceName=fileName||title||'مستند بدون عنوان';if(!/\.[a-z0-9]{2,6}$/i.test(niceName)&&kind)niceName+='.'+({excel:'xlsx','إكسل':'xlsx','اكسل':'xlsx',image:'jpg','صورة':'jpg',pdf:'pdf',PDF:'pdf'}[kind]||String(kind).replace(/^\./,''));valid.push({id:'cloud_'+i,unit:c+':'+p,goal:parseGoal(goal),category:identifyCategory(category),title:title||niceName,fileName:niceName,date,notes,addedAt:('000000'+(999999-i)).slice(-6),size:0,remote:true,url:file.orig,previewUrl:file.preview,fileType:kind||''})});cloudInfo.skipped=skipped;return valid}
-function parseCloudProgress(rows){const next={};for(let cols of rows){let [c,p,g,value]=cols.map(v=>String(v??'').trim()),ci=identifyCenter(c),pi=identifyPeriod(p),gi=parseGoal(g),v=Number(value);if(ci&&pi&&gi&&Number.isFinite(v)&&v>=0){let key=ci+':'+pi;next[key]??={};next[key][gi]=v}}return next}
+function parseCloudProgress(rows){const next={};for(let cols of rows){let [c,p,g,value]=cols.map(v=>String(v??'').trim()),ci=identifyCenter(c),pi=identifyPeriod(p),gi=parseGoal(g),v=Number(value);if(ci&&pi&&gi&&String(value).trim()!==''&&/^\d+(?:\.\d+)?$/.test(String(value).trim())&&Number.isFinite(v)&&v>=0){let key=ci+':'+pi;next[key]??={};next[key][gi]=v}}return next}
 async function refreshFiles(){if(!linkedSheetId){filesCache=[];cloudProgress={};cloudInfo.error='لم يتم ربط جدول Google Sheets بعد';cloudInfo.loading=false;return}cloudInfo.loading=true;cloudInfo.error='';cloudInfo.progressError='';const result=await Promise.allSettled([querySheet(SHEET_TABS.evidence),querySheet(SHEET_TABS.progress)]);if(result[0].status==='fulfilled'){filesCache=parseCloudEvidence(result[0].value);cloudInfo.lastUpdated=new Date().toLocaleTimeString('ar-AE',{hour:'2-digit',minute:'2-digit'});}else{filesCache=[];cloudInfo.error=result[0].reason?.message||'فشل تحميل الشواهد'}if(result[1].status==='fulfilled')cloudProgress=parseCloudProgress(result[1].value);else{cloudProgress={};cloudInfo.progressError='تعذّر قراءة تبويب الإنجاز؛ تحقّق من اسمه وإتاحته.'}cloudInfo.loading=false}
 function goals(){let p=plan();return G_BASE.map(x=>({...x,target:[p.visits,p.exams,2,5,3][x.id-1],title:[`تنفيذ عدد ${p.visits} زيارة تقييمية وإشرافية لـ ${p.circles} حلقات قرآنية (${P[selPeriod]}) خلال 2026`,`اختبار ${p.exams} دارسًا وتقييم مستواهم (مستويات وأجزاء) خلال 2026`,p.goal3,p.goal4,'تقديم 3 تقارير في السنة لتقييم عمل معلمي القرآن خلال 2026'][x.id-1],quarter:x.id===5?[25,25,25,25]:p.quarter,done:Number(cloudProgress[unit()]?.[x.id]||0)}))}
 const _originalDashboard=originalRenderDashboard;
@@ -306,19 +314,32 @@ function allGoalRows(){
   }
   return result;
 }
+let rejectedGoalRows=[];
+function goalNumber(value,min,max){
+  // Reject dates, formatted text, formulas or invalid numbers; do not expose NaN in the public portfolio.
+  const v=String(value??'').trim();
+  if(!/^(?:\d+)(?:\.\d+)?$/.test(v))return null;
+  const n=Number(v);return Number.isFinite(n)&&n>=min&&n<=max?n:null;
+}
 function parseGoalOverrides(rows){
-  const found={},indexes={};
+  const found={},indexes={},rejected=[];
   for(let i=0;i<rows.length;i++){
     const r=rows[i],c=identifyCenter(r[0]),p=identifyPeriod(r[1]),n=parseGoal(r[2]);
     if(!c||!p||!n||!CENTERS[c].periods.includes(p))continue;
-    const k=c+':'+p,d=defaultGoalFor(k,n);
-    const num=(v,def)=>v===''||v==null?def:Number(v);
-    let quarter=[9,10,11,12].map((j,x)=>num(r[j],d.quarter[x]));
-    if(quarter.some(q=>!Number.isFinite(q)))quarter=d.quarter;
-    found[k]??={};indexes[k]??={};indexes[k][n]=i+2;
-    found[k][n]={title:String(r[3]||d.title),target:num(r[4],d.target),unit:String(r[5]||d.unit),weight:num(r[6],d.weight),initiative:String(r[7]||d.initiative),activity:String(r[8]||d.activity),quarter};
+    const key=c+':'+p,base=defaultGoalFor(key,n);
+    const title=String(r[3]??'').trim(),target=goalNumber(r[4],0,1000000),weight=goalNumber(r[6],0,100);
+    const quarter=[9,10,11,12].map(j=>goalNumber(r[j],0,100));
+    const unitText=String(r[5]??'').trim();
+    const valid=title.length>=20 && !/^(?:Date\(|\d{4}-\d\d-\d\d)/.test(title)
+      &&target!==null&&weight!==null&&unitText.length>0&&unitText.length<45
+      &&quarter.every(q=>q!==null)&&quarter.reduce((a,b)=>a+b,0)===100;
+    if(!valid){rejected.push(`${CENTERS[c].short} / ${p==='morning'?'صباحي':'مسائي'} / الهدف ${n}`);continue;}
+    found[key]??={};indexes[key]??={};indexes[key][n]=i+2;
+    found[key][n]={title,target,unit:unitText,weight,
+      initiative:String(r[7]??base.initiative)||base.initiative,
+      activity:String(r[8]??base.activity)||base.activity,quarter};
   }
-  cloudGoalOverrides=found;cloudGoalRows=indexes;
+  cloudGoalOverrides=found;cloudGoalRows=indexes;rejectedGoalRows=rejected;
 }
 const _goalReadBeforeCloud=goals;
 goals=function(){return _goalReadBeforeCloud().map(g=>({ ...g,...(cloudGoalOverrides[unit()]?.[g.id]||{}) }));};
@@ -330,8 +351,8 @@ refreshFiles=async function(){
     const rows=await querySheet(GOALS_TAB);
     parseGoalOverrides(rows);hasCloudGoalsTab=true;
   }catch(e){
-    // Older workbook does not contain the goals tab yet. Preserve the built-in plan.
-    if(!hasCloudGoalsTab){cloudGoalOverrides={};cloudGoalRows={};}
+    // Preserve defaults when the goals tab is absent or unavailable.
+    cloudGoalOverrides={};cloudGoalRows={};rejectedGoalRows=[];
   }
 };
 function sheetQuoted(name){return "'"+name.replace(/'/g,"''")+"'";}
@@ -352,7 +373,7 @@ async function sheetsRequest(path,{method='GET',body}={}){
 }
 async function sheetsGetRange(range){return await sheetsRequest('/values/'+encodeURIComponent(range));}
 async function sheetsPutRanges(data){
-  return await sheetsRequest('/values:batchUpdate',{method:'POST',body:{valueInputOption:'USER_ENTERED',data:data.map(d=>({range:d.range,majorDimension:'ROWS',values:d.values}))}});
+  return await sheetsRequest('/values:batchUpdate',{method:'POST',body:{valueInputOption:'RAW',data:data.map(d=>({range:d.range,majorDimension:'ROWS',values:d.values}))}});
 }
 function rowIdentity(row){
   const c=identifyCenter(row[0]),p=identifyPeriod(row[1]),n=parseGoal(row[2]);
@@ -446,15 +467,38 @@ async function saveGoalEditor(n){
 }
 const _renderGoalCardBeforeCloud=goalCard;
 goalCard=function(g){
-  const base=_renderGoalCardBeforeCloud(g);
-  return base.replace('</div></div>',`<button class="btn sm" style="margin-inline-start:5px" onclick="openGoalEditor(${g.id})">${ic('edit',13)} تعديل الهدف</button></div></div>`);
+  let html=_renderGoalCardBeforeCloud(g);
+  if(isAdmin())html=html.replace('تفاصيل الهدف', 'تفاصيل الهدف'); // retain original footer; editor is available in goal detail
+  return html;
 };
 const _renderGoalDetailBeforeCloud=renderGoalDetail;
-renderGoalDetail=function(n){return _renderGoalDetailBeforeCloud(n).replace('تسجيل أو تعديل الإنجاز','تعديل الهدف والإنجاز').replace(`onclick="openUpdate(${n})"`,`onclick="openGoalEditor(${n})"`)};
+renderGoalDetail=function(n){
+  let html=_renderGoalDetailBeforeCloud(n);
+  return html.replace('تسجيل أو تعديل الإنجاز','تعديل الهدف والمستهدف والإنجاز')
+    .replace(`onclick="openUpdate(${n})"`,`onclick="openGoalEditor(${n})"`);
+};
 const _renderPerformanceBeforeCloud=renderPerformance;
 renderPerformance=function(){let output=_renderPerformanceBeforeCloud();output=output.replaceAll('onclick="openUpdate(', 'onclick="openGoalEditor(');output=output.replace('<th>المؤشر</th>','<th>المؤشر</th><th>نص الهدف</th>');return output.replace(/(<td class="td-strong">[^<]*<\/td>)/g,(match,cell)=>{const m=match.match(/<td class="td-strong">([^<]*)<\/td>/);const g=goals().find(x=>x.metric===m?.[1]);return cell+(g?`<td class="righttext" style="min-width:230px">${esc(g.title)}</td>`:'<td></td>');});};
 const _renderSettingsBeforeCloud=renderSettings;
 renderSettings=function(){let out=_renderSettingsBeforeCloud();return out+`<div class="panel" style="margin-top:18px;padding:20px"><h3>إدارة الأهداف والمستهدفات — Google Sheets</h3><p class="section-note">اختر الهدف لتعديل وصفه والمستهدف والإنجاز ونسب الأرباع. لا تُحفظ الأرقام في هذا المتصفح بل مباشرة في Google Sheets.</p><div class="actions" style="flex-wrap:wrap">${goals().map(g=>`<button class="btn" onclick="openGoalEditor(${g.id})">تعديل الهدف ${g.id} — ${esc(g.metric)}</button>`).join('')}</div><div class="notice gold" style="margin-top:12px">عند أول تعديل سيُنشأ تلقائيًا تبويب «الأهداف» وستُضاف أوصاف الأهداف في العمود F من تبويب «الإنجاز» للصف الذي تعدله.</div></div>`;};
+const _renderGoalsSafe=renderGoals;
+renderGoals=function(){
+  let html=_renderGoalsSafe();
+  if(rejectedGoalRows.length){
+    html=`<div class="notice gold" style="margin-bottom:15px;display:block;line-height:1.8">⚠️ توجد بيانات أهداف غير صالحة في Google Sheets (${rejectedGoalRows.length} صف). عُرضت قيم الخطة الأصلية بدلًا منها لحماية التقارير من الأرقام الخاطئة. ادخل بحساب المشرف لتصحيح البيانات.</div>`+html;
+  }
+  if(isAdmin()){
+    const actions=`<div class="panel" style="margin-bottom:18px;padding:18px"><h3 style="margin:0 0 12px">تعديل الأهداف والمستهدفات</h3><div class="actions" style="display:flex;flex-wrap:wrap;gap:8px">${goals().map(g=>`<button type="button" class="btn sm" onclick="openGoalEditor(${g.id})">${ic('edit',14)} تعديل الهدف ${g.id}</button>`).join('')}</div></div>`;
+    html=actions+html;
+  }
+  return html;
+};
+const _renderDashboardSafe=renderDashboard;
+renderDashboard=function(){
+  const html=_renderDashboardSafe();
+  if(rejectedGoalRows.length)return `<div class="notice gold" style="display:block;margin-bottom:15px">⚠️ بعض بيانات المستهدفات في Google Sheets غير صالحة؛ أُظهرت أرقام الخطة الأصلية مؤقتًا. راجع تبويب «الأهداف» قبل الاعتماد على المؤشرات.</div>`+html;
+  return html;
+};
 // Old locally stored progress must not be mistaken for a shared cloud update.
 openUpdate=function(n){return openGoalEditor(n)};
 
